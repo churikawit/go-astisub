@@ -134,6 +134,13 @@ func main() {
 		if err = sub.Write(*outputPath); err != nil {
 			log.Fatalf("%s while writing to %s", err, *outputPath)
 		}
+	case "merge_line":
+		sub.MergeLine()
+
+		// Write
+		if err = sub.Write(*outputPath); err != nil {
+			log.Fatalf("%s while writing to %s", err, *outputPath)
+		}
 	default:
 		log.Fatalf("Invalid subcommand %s", cmd)
 	}

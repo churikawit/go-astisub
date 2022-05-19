@@ -517,6 +517,46 @@ func (s *Subtitles) Merge(i *Subtitles) {
 	}
 }
 
+// MergeLine() 
+func (s *Subtitles) MergeLine() {
+	// Nothing to do if less than 1 element
+	if len(s.Items) <= 1 {
+		return
+	}
+
+	// Order
+	s.Order()
+
+	// Loop through items
+	for i := 0; i < len(s.Items)-1; i++ {
+		for j := i + 1; j < len(s.Items); j++ {
+			// Items are time overlap
+			// if s.Items[i].String() == s.Items[j].String() && s.Items[i].EndAt >= s.Items[j].StartAt {
+			if s.Items[i].StartAt == s.Items[j].StartAt {
+				// Only override end time if longer
+				/* if s.Items[i].EndAt < s.Items[j].EndAt {
+					s.Items[i].EndAt = s.Items[j].EndAt
+				} */
+
+				// Order by Language
+				left := []byte(s.Items[i].String())
+				right := []byte(s.Items[j].String())
+				if left[0] <= right[0] {
+					s.Items[i].Lines = append(s.Items[i].Lines, s.Items[j].Lines...)
+				} else {
+					s.Items[i].Lines = append(s.Items[j].Lines, s.Items[i].Lines...)
+				}
+				
+				// Remove Item
+				s.Items = append(s.Items[:j], s.Items[j+1:]...)
+				j--
+			} else if s.Items[i].EndAt < s.Items[j].StartAt {
+				break
+			}
+		}
+	}
+}
+
 // Optimize optimizes subtitles
 func (s *Subtitles) Optimize() {
 	// Nothing to optimize
