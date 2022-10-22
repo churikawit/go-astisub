@@ -541,7 +541,8 @@ func (s *Subtitles) MergeLine() {
 				// Order by Language
 				left := []byte(s.Items[i].String())
 				right := []byte(s.Items[j].String())
-				if left[0] <= right[0] {
+
+				if len(left) == 0 || len(right) == 0 || left[0] <= right[0] {
 					s.Items[i].Lines = append(s.Items[i].Lines, s.Items[j].Lines...)
 				} else {
 					s.Items[i].Lines = append(s.Items[j].Lines, s.Items[i].Lines...)
